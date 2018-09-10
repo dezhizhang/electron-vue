@@ -28,6 +28,8 @@ function createWindow () {
   mainWindow.on('closed', () => {
     mainWindow = null
   })
+  require('./main.js');
+  
 }
 
 app.on('ready', createWindow)
