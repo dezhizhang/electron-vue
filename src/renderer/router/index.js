@@ -1,7 +1,7 @@
 import Vue from 'vue'
 import Router from 'vue-router'
-import Home from '@/components/home/Home'
-import News from '@/components/news/News'
+import Home from '../components/home/Home'
+import News from '../components/news/News'
 
 Vue.use(Router)
 

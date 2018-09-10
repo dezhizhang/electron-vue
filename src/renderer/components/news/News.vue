@@ -7,11 +7,7 @@
 <script>
 export default {
   name:'News',
-  data(){
-    retrun {
-
-    }
-  }
+  
 }
 </script>
 
