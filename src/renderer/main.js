@@ -1,8 +1,11 @@
-import Vue from 'vue'
-import axios from 'axios'
+import Vue from 'vue';
+import axios from 'axios';
 
-import App from './App'
-import router from './router'
+import App from './App';
+import router from './router';
+
+import db from './datastore';
+Vue.prototype.$db= db
 
 import ElementUI from 'element-ui';
 import 'element-ui/lib/theme-chalk/index.css';
