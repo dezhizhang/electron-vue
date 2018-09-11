@@ -1,9 +1,9 @@
 <template>
   <div class='header'>
      <div class='header-wapper'>
-        <i class='iconfont icon-zuixiaohua'></i>
-        <i class='iconfont icon-zuidahua'></i>
-        <i class='iconfont icon-close'></i>
+        <i @click='handleMain' class='iconfont icon-zuixiaohua'></i>
+        <i @click='handleMax' class='iconfont icon-zuidahua'></i>
+        <i @click='handleClose' class='iconfont icon-close'></i>
      </div>
   </div>
 </template>
@@ -11,7 +11,24 @@
 <script>
 export default{
     name:'Header',
+    data(){
+      return {
 
+      }
+    },
+    methods:{
+      handleMain(){
+        this.$electron.ipcRenderer.send('window-min')
+
+      },
+      handleMax(){
+        this.$electron.ipcRenderer.send('window-max')
+      },
+      handleClose(){
+        this.$electron.ipcRenderer.send('window-close')
+
+      }
+    }
 }
 </script>
 

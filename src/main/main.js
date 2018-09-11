@@ -1,13 +1,29 @@
-let { ipcMain } = require('electron');
 
-//接怍渲染进程的数据
-ipcMain.on('message',(event,data)=> {
-    console.log('1122');
+let  { ipcMain,BrowserWindow } = require('electron');
 
-    console.log(data);
+let window = BrowserWindow.getFocusedWindow();
+
+
+//执行窗口最小化
+ipcMain.on('window-min',() => {
+    window.minimize();
+
+});
+
+//执行窗口最大化
+ipcMain.on('window-max',() => {
+  if(window.isMaximized()){
+      window.restore();
+
+  } else {
+    window.maximize();
+  }
+  
+});
+
+//执行窗口关闭
+ipcMain.on('window-close',() => {
+    window.close();
 
 })
-
-
-
 
