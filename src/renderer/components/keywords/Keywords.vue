@@ -1,12 +1,12 @@
 <template>
-  <div class='news'>
+  <div class='Keywords'>
       我是新闻页
   </div>
 </template>
 
 <script>
 export default {
-  name:'News',
+  name:'Keywords',
   
 }
 </script>

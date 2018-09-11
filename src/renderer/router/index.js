@@ -1,8 +1,10 @@
-import Vue from 'vue'
-import Router from 'vue-router'
-import Home from '../components/home/Home'
-import News from '../components/news/News'
-import Header from '../components/header/Header.vue'
+import Vue from 'vue';
+import Router from 'vue-router';
+import Home from '../components/home/Home';
+import Keyword from '../components/keywords/Keywords';
+import Header from '../components/header/Header.vue';
+import Report from '../components/report/Report';
+
 
 Vue.use(Router)
 
@@ -19,9 +21,14 @@ export default new Router({
       component: Home
     },
     {
-      path: '/news',
-      name: 'news',
-      component: News
+      path: '/keyword',
+      name: 'keyword',
+      component: Keyword
+    },
+    {
+      path:'/report',
+      name:'report',
+      component:Report
     }
   ]
 })
