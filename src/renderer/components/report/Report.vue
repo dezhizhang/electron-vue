@@ -1,6 +1,6 @@
 <template>
   <div class='report'>
-  
+     我是报表
   </div>  
 </template>
 

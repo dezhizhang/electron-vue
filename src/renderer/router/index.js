@@ -2,8 +2,8 @@ import Vue from 'vue';
 import Router from 'vue-router';
 import Home from '../components/home/Home';
 import Keyword from '../components/keywords/Keywords';
-import Header from '../components/header/Header.vue';
 import Report from '../components/report/Report';
+import User from '../components/user/User';
 
 
 Vue.use(Router)
@@ -11,12 +11,7 @@ Vue.use(Router)
 export default new Router({
   routes: [
     {
-       path:'/',
-       name:'header',
-       component:Header
-    },
-    {
-      path: '/home',
+      path: '/',
       name: 'home',
       component: Home
     },
@@ -29,6 +24,11 @@ export default new Router({
       path:'/report',
       name:'report',
       component:Report
+    },
+    {
+      path:'/user',
+      name:'user',
+      component:User
     }
   ]
 })
