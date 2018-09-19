@@ -7,12 +7,12 @@
             :visible.sync="dialogFormVisible">
             <el-form>
                 <el-form-item>
-                    <el-input placeholder='请输入用户名'></el-input>
+                    <el-input v-model='userInfo.username' placeholder='请输入用户名'></el-input>
                 </el-form-item>
                 <el-form-item>
-                    <el-input placeholder='请输入用密码'></el-input>
+                    <el-input v-model='userInfo.password' placeholder='请输入用密码'></el-input>
                 </el-form-item> 
-                <el-button style="width:100%"  type='primary'>登  录</el-button>
+                <el-button style="width:100%"  type='primary' @click ='doLogin'>登  录</el-button>
             </el-form>
        </el-dialog>
       </div>
@@ -25,8 +25,11 @@
 </template>
 
 <script>
+import tools from '../../model/tools.js'
 let path = require('path');
 let fs = require('fs');
+console.log(tools);
+
 
 // Build the chart
 let pieOption= {
@@ -131,18 +134,72 @@ export default {
   name:'Home',
   data(){
     return {
+      userInfo:{
+        username:"",
+        password:''
+      },
       pieOption,
       columnOption,
       formLabelWidth:'120px',
       dialogFormVisible:true,
-      form:{
-          name:''
-      }
-      
+     
 
     }
+  },
+  beforeMount() {
+      //let userInfo = localStorage.getItem('userInfo');
+      let userInfo = tools.stroage.get('userInfo'); //获取用户信息
+
+      if(userInfo){
+          this.dialogFormVisible = false;
+
+      }else{
+          this.dialogFormVisible = true;
+
+      }
+
+  },
+  methods:{
+       doLogin () {
+           
+           
+           if(this.userInfo.username && this.userInfo.password){
+           this.$http.post(tools.config.apiUrl+'/index.php?m=Api&a=login', {
+                username: this.userInfo.username,
+                password: this.userInfo.password
+            })
+            .then((response) => {
+                 response = response.data;
+                if(response.success){
+                    // localStorage.setItem('userInfo', JSON.stringify(response));
+                    tools.stroage.set('userInfo',response.result); //保存用户信息
+                    this.dialogFormVisible = false;
+                    
+
+                } else {
+                    this.$message({
+                        message:response.message,
+                        type:'warning'
+                    })
+                }
+            })
+            .catch(function (error) {
+                console.log(error);
+            });
+
+                  
+           } else {
+               this.$message({
+                message: '用户名或密码不能为空！',
+                type: 'warning'
+                });
+           }
+            
+
+
+
+       }
   }
-  
   
  
 }
