@@ -77,8 +77,12 @@ export default {
 </script>
 
 <style scoped>
+.keywords-table{
+  margin-bottom:10px;
+}
 .keywords-pagination{
   float:right;
+
 
 }
 </style>

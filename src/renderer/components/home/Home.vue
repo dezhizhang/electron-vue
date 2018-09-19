@@ -1,7 +1,25 @@
 <template>
   <div class='home'>
+    <div class='home-logo'>
+        <el-dialog title="用户登录" :close-on-click-modal="false"
+            :show-close="false"    :close-on-press-escape="false" 
+            :center="true" 
+            :visible.sync="dialogFormVisible">
+            <el-form>
+                <el-form-item>
+                    <el-input placeholder='请输入用户名'></el-input>
+                </el-form-item>
+                <el-form-item>
+                    <el-input placeholder='请输入用密码'></el-input>
+                </el-form-item> 
+                <el-button style="width:100%"  type='primary'>登  录</el-button>
+            </el-form>
+       </el-dialog>
+      </div>
+    <div class='home-charts'>
       <highcharts :options="pieOption"></highcharts>
       <highcharts :options="columnOption"></highcharts>
+    </div>
   </div>
   </div>
 </template>
@@ -115,6 +133,11 @@ export default {
     return {
       pieOption,
       columnOption,
+      formLabelWidth:'120px',
+      dialogFormVisible:true,
+      form:{
+          name:''
+      }
       
 
     }
