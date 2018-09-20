@@ -59,22 +59,33 @@ export default {
         //http://www.apiying.com/yuqing/index.php?m=Api&a=addKeywords
         let userInfo = tools.stroage.get('userInfo')
        
-        let sign = tools.sign({
+        let sign = tools.stroage.sign({
           'a':'addKeywords',
           'uid':userInfo.id,
           'salt':userInfo.salt,
         });
+      
 
         this.$http.post(tools.config.apiUrl+'/index.php?m=Api&a=addKeywords', {
             keyword: this.form.keyword,
             may_keyword: this.form.may_keyword,
-            nokeyword: this.from.nokeyword,
-            frequency: this.from.frequency,
+            nokeyword: this.form.nokeyword,
+            frequency: this.form.frequency,
             sign:sign,
             uid:userInfo.id,
           })
-          .then(function (response) {
-            console.log(response);
+          .then((response) => {
+             if(response.data.success){
+               this.keywordsVisible = false;
+            
+
+             } else {
+               this.$message({
+                  showClose: true,
+                  message: response.data.message,
+                  type: 'warning'
+                });
+             }
           })
           .catch(function (error) {
             console.log(error);

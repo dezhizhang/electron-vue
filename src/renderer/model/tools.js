@@ -1,3 +1,4 @@
+var md5 = require('md5');
 let app = {
     config:{
         apiUrl:'http://www.apiying.com/yuqing'
@@ -18,7 +19,24 @@ let app = {
            }
            
 
+        },
+        sign(json){
+            console.log(json);
+
+            let arr = [];
+            for(let i in json) {
+                arr.push(i);
+
+            }
+            arr = arr.sort();
+            let str = '';
+            for(let i=0;i<arr.length;i++){
+                str+= arr[i] + json[arr[i]]
+            }
+            return md5(str);
+
         }
+
     }
  }
 
