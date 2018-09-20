@@ -1,4 +1,4 @@
-var md5 = require('md5');
+var md5 = require('md5-js');
 let app = {
     config:{
         apiUrl:'http://www.apiying.com/yuqing'

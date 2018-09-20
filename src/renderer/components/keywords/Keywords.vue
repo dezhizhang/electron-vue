@@ -91,14 +91,57 @@ export default {
 
       },
       handleEditClick (item){
+         let editApi = tools.config.apiUrl +'/index.php?m=Api&a=oneKeywordsList&uid='+userInfo.id+'&sign='+sign+'&id='+item.id;
          this.editKeywordsVisible = true;
-         this.editId = item.id;
-         
-
-
+             let userInfo = tools.stroage.get('userInfo')
+          let sign = tools.stroage.sign({
+              'id':item.id,
+              'a':'oneKeywordsList',
+              'uid':userInfo.id,
+              'salt':userInfo.salt,
+           });
+           
+          this.$http.get(editApi)
+          .then((response) => {
+            let result = response.data.result
+            this.editForm.keyword = result.keyword;
+            this.editForm.may_keyword = result.may_keyword;
+            this.editForm.nokeyword = result.nokeyword;
+            this.editForm.frequency = result.frequency;
+            console.log(response);
+          })
+          .catch(function (error) {
+            console.log(error);
+          });
       },
       editKeyWordsSubmit () {
+           console.log(this.editForm.id);
 
+          //：http://www.apiying.com/yuqing/index.php?m=Api&a=editKeywords
+             let userInfo = tools.stroage.get('userInfo')
+             let sign = tools.stroage.sign({
+                'id':this.editForm.id,
+                'a':'editKeywords',
+                'uid':userInfo.id,
+                'salt':userInfo.salt,
+              });
+          //   this.$http.post(tools.config.apiUrl+'/index.php?m=Api&a=editKeywords', {
+          //       id:this.editForm.id,
+          //       keyword: this.editForm.keyword,
+          //       may_keyword: this.editForm.may_keyword,
+          //       nokeyword: this.editForm.nokeyword,
+          //       frequency: this.editForm.frequency,
+          //       sign:sign,
+          //       uid:userInfo.id,
+          //  }).
+          //  then((response) => {
+          //    console.log(response);
+
+          //  })
+          //  .catch(function (error) {
+          //   console.log(error);
+          // });
+    
       },
       
       addKeyWordsSubmit () {
@@ -109,13 +152,13 @@ export default {
           'uid':userInfo.id,
           'salt':userInfo.salt,
         });
-        console.log(this.form);
+      
 
         this.$http.post(tools.config.apiUrl+'/index.php?m=Api&a=addKeywords', {
-            keyword: this.form.keyword,
-            may_keyword: this.form.may_keyword,
-            nokeyword: this.form.nokeyword,
-            frequency: this.form.frequency,
+            keyword: this.addForm.keyword,
+            may_keyword: this.addForm.may_keyword,
+            nokeyword: this.addForm.nokeyword,
+            frequency: this.addForm.frequency,
             sign:sign,
             uid:userInfo.id,
           })
@@ -147,17 +190,9 @@ export default {
         //http://www.apiying.com/yuqing/index.php?m=Api&a=keywordsList
         let api = tools.config.apiUrl +'/index.php?m=Api&a=keywordsList&uid='+userInfo.id+'&sign='+sign;
         
-        this.$http.get(api,{
-          params : { 
-                    uid : userInfo.id,
-                    sign: sign
-                  }
-        })
+        this.$http.get(api)
         .then((response) => {
           this.tableData = response.data.result;
-          console.log(response.data);
-
-
 
         })
         .catch(function (error) {
@@ -173,8 +208,8 @@ export default {
         addKeywordsVisible: false,
         editKeywordsVisible:false,
         formLabelWidth: '120px',
-        editId:'',
         tableData: [],
+        editId:'',
         addForm: {
           keyword: '',
           may_keyword:'',
