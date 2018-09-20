@@ -60,7 +60,7 @@ export default {
         let userInfo = tools.stroage.get('userInfo')
        
         let sign = tools.sign({
-          'a':'addKeywords',x
+          'a':'addKeywords',
           'uid':userInfo.id,
           'salt':userInfo.salt,
         });
