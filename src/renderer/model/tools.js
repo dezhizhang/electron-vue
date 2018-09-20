@@ -21,7 +21,7 @@ let app = {
 
         },
         sign(json){
-            console.log(json);
+            
 
             let arr = [];
             for(let i in json) {

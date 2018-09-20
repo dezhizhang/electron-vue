@@ -3,45 +3,80 @@
      <div class='keywords-btn'>
         <el-button size='small' type='primary' @click='addKeyWords'>增加关建字</el-button>
      </div>
+     <!--增加关建词开始-->
      <div class='keywords-form'> 
-        <el-dialog title="增加关建词" center :visible.sync="keywordsVisible">
-            <el-form :model="form">
+        <el-dialog title="增加关建词" center :visible.sync="addKeywordsVisible">
+            <el-form :model="addForm">
               <el-form-item label="必须包含关建字" :label-width="formLabelWidth">  
-                <el-input v-model="form.keyword" autocomplete="off"></el-input>
+                <el-input v-model="addForm.keyword" autocomplete="off"></el-input>
               </el-form-item>
               <el-form-item label="可包含关建字" :label-width="formLabelWidth">
-                <el-input v-model="form.may_keywor" autocomplete="off"></el-input>
+                <el-input v-model="addForm.may_keyword" autocomplete="off"></el-input>
               </el-form-item>
               <el-form-item label="不包含关建字" :label-width="formLabelWidth">
-                <el-input v-model="form.nokeyword" autocomplete="off"></el-input>
+                <el-input v-model="addForm.nokeyword" autocomplete="off"></el-input>
               </el-form-item>
               <el-form-item label="监控频率" :label-width="formLabelWidth">
-                <el-input v-model="form.frequency" autocomplete="off"></el-input>
+                <el-input v-model="addForm.frequency" autocomplete="off"></el-input>
               </el-form-item>
              </el-form>
-            <div slot="footer" class="dialog-footer">
+            <div slot="footer" style="text-align:right" class="dialog-footer">
                 <el-button size='small' @click="dialogFormVisible = false">取 消</el-button>
                 <el-button size='small' type="primary" @click="addKeyWordsSubmit">确 定</el-button>
             </div>
         </el-dialog>
      </div>
+      <!--增加关建词结束-->
+      <!--列表部分开始-->
      <div class='keywords-table'>
         <el-table :data="tableData" border style="width: 100%">
-         
-          <el-table-column prop="keyword" label="必须包含关建字" width="240">
+              <el-table-column prop="keyword" label="必须包含关建字" width="200">
           </el-table-column>
-          <el-table-column prop="may_keywor" label="可包含关建字" width="240">
+               <el-table-column prop="may_keyword" label="可包含关建字" width="200">
           </el-table-column>
-           <el-table-column prop="nokeyword" label="不包含关建字" width="240"> 
+               <el-table-column prop="nokeyword" label="不包含关建字" width="200"> 
           </el-table-column>
-           <el-table-column prop="frequency" label="监控频率" width="240">
+               <el-table-column prop="frequency" label="监控频率" width="200">
+          </el-table-column>
+           <el-table-column  label="操作"  fixed="right"  width="200">
+              <template slot-scope="scope">
+                  <el-button @click="handleEditClick(scope.row)" type="text" size="small">编辑</el-button>  | 
+                  <el-button type="text" size="small">编辑</el-button>
+              </template>
           </el-table-column>
         </el-table> 
      </div>
+      <!--列表部分结束-->
+      <!--分页器开始-->
     <div class='keywords-pagination'>
       <el-pagination background layout="prev, pager, next" :total="1000">
       </el-pagination>
     </div>
+    <!--分页器结束-->
+    <!--编辑开始-->
+    <div class='keywords-edit'>
+        <el-dialog title="增加关建词" center :visible.sync="editKeywordsVisible">
+            <el-form :model="editForm">
+              <el-form-item label="必须包含关建字" :label-width="formLabelWidth">  
+                <el-input v-model="editForm.keyword" autocomplete="off"></el-input>
+              </el-form-item>
+              <el-form-item label="可包含关建字" :label-width="formLabelWidth">
+                <el-input v-model="editForm.may_keyword" autocomplete="off"></el-input>
+              </el-form-item>
+              <el-form-item label="不包含关建字" :label-width="formLabelWidth">
+                <el-input v-model="editForm.nokeyword" autocomplete="off"></el-input>
+              </el-form-item>
+              <el-form-item label="监控频率" :label-width="formLabelWidth">
+                <el-input v-model="editForm.frequency" autocomplete="off"></el-input>
+              </el-form-item>
+             </el-form>
+            <div slot="footer" style="text-align:right"  class="dialog-footer">
+                <el-button size='small' @click="dialogFormVisible = false">取 消</el-button>
+                <el-button size='small' type="primary" @click="editKeyWordsSubmit">确 定</el-button>
+            </div>
+        </el-dialog>
+    </div>
+     <!--编辑结束-->
   </div>
 </template> 
 
@@ -50,21 +85,31 @@ import tools from '../../model/tools.js'
 export default {
   name:'Keywords',
   methods:{
-      addKeyWords() {
-        this.keywordsVisible = true;
+      addKeyWords () {
+        this.addKeywordsVisible = true;
         
 
       },
-      addKeyWordsSubmit() {
+      handleEditClick (item){
+         this.editKeywordsVisible = true;
+         this.editId = item.id;
+         
+
+
+      },
+      editKeyWordsSubmit () {
+
+      },
+      
+      addKeyWordsSubmit () {
         //http://www.apiying.com/yuqing/index.php?m=Api&a=addKeywords
         let userInfo = tools.stroage.get('userInfo')
-       
         let sign = tools.stroage.sign({
           'a':'addKeywords',
           'uid':userInfo.id,
           'salt':userInfo.salt,
         });
-      
+        console.log(this.form);
 
         this.$http.post(tools.config.apiUrl+'/index.php?m=Api&a=addKeywords', {
             keyword: this.form.keyword,
@@ -76,8 +121,9 @@ export default {
           })
           .then((response) => {
              if(response.data.success){
-               this.keywordsVisible = false;
-            
+               this.addKeywordsVisible = false;
+               //增加完成时重新获取数据
+               this.getKeyWordsList();
 
              } else {
                this.$message({
@@ -90,24 +136,66 @@ export default {
           .catch(function (error) {
             console.log(error);
           });
-      }
+      },
+       getKeyWordsList(){
+       let userInfo = tools.stroage.get('userInfo')
+        let sign = tools.stroage.sign({
+          'a':'keywordsList',
+          'uid':userInfo.id,
+          'salt':userInfo.salt,
+        });
+        //http://www.apiying.com/yuqing/index.php?m=Api&a=keywordsList
+        let api = tools.config.apiUrl +'/index.php?m=Api&a=keywordsList&uid='+userInfo.id+'&sign='+sign;
+        
+        this.$http.get(api,{
+          params : { 
+                    uid : userInfo.id,
+                    sign: sign
+                  }
+        })
+        .then((response) => {
+          this.tableData = response.data.result;
+          console.log(response.data);
+
+
+
+        })
+        .catch(function (error) {
+            console.log(error);
+          });
   },
+ 
+  },
+ 
+
   data(){
     return{
-        keywordsVisible: false,
+        addKeywordsVisible: false,
+        editKeywordsVisible:false,
         formLabelWidth: '120px',
-        tableData: [{
-
-        }],
-        form: {
+        editId:'',
+        tableData: [],
+        addForm: {
           keyword: '',
-          may_keywor:'',
+          may_keyword:'',
+          nokeyword:'',
+          frequency:''
+    
+        },
+        editForm: {
+          keyword: '',
+          may_keyword:'',
           nokeyword:'',
           frequency:''
     
         },
     }
-  }
+  },
+   mounted() {
+    this.getKeyWordsList();
+
+
+  },
   
 }
 </script>
