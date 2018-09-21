@@ -41,7 +41,7 @@
            <el-table-column  label="操作"  fixed="right"  width="200">
               <template slot-scope="scope">
                   <el-button @click="handleEditClick(scope.row)" type="text" size="small">编辑</el-button>  | 
-                  <el-button type="text" size="small">删除</el-button>
+                  <el-button type="text" @click='handleDeleteClick(scope.row)' size="small">删除</el-button>
               </template>
           </el-table-column>
         </el-table> 
@@ -91,7 +91,7 @@ export default {
 
       },
       handleEditClick (item){
-        console.log(item.id);
+        //console.log(item.id);
 
          
          this.editKeywordsVisible = true;
@@ -111,22 +111,25 @@ export default {
             this.editForm.may_keyword = result.may_keyword;
             this.editForm.nokeyword = result.nokeyword;
             this.editForm.frequency = result.frequency;
+            this.editForm.editId = result.id;
+
           })
           .catch(function (error) {
             console.log(error);
           });
       },
       editKeyWordsSubmit () {
-          //：http://www.apiying.com/yuqing/index.php?m=Api&a=editKeywords
              let userInfo = tools.stroage.get('userInfo')
              let sign = tools.stroage.sign({
-                'id':this.editForm.id,
+                'id':this.editForm.editId,
                 'a':'editKeywords',
                 'uid':userInfo.id,
                 'salt':userInfo.salt,
               });
+             
+
             this.$http.post(tools.config.apiUrl+'/index.php?m=Api&a=editKeywords', {
-                id:this.editForm.id,
+                id:this.editForm.editId,
                 keyword: this.editForm.keyword,
                 may_keyword: this.editForm.may_keyword,
                 nokeyword: this.editForm.nokeyword,
@@ -135,17 +138,59 @@ export default {
                 uid:userInfo.id,
            }).
            then((response) => {
-             console.log(response);
+             if(response.data.success){
+                this.editKeywordsVisible = false;
+                this.getKeyWordsList();
+
+             }
 
            })
-          //  .catch(function (error) {
-          //   console.log(error);
-          // });
+           .catch(function (error) {
+            console.log(error);
+          });
     
       },
+
+      handleDeleteClick(item){
+        //http://www.apiying.com/yuqing/index.php?m=Api&a=removeKeywords
+             let userInfo = tools.stroage.get('userInfo')
+             let sign = tools.stroage.sign({
+                'id':item.id,
+                'a':'removeKeywords',
+                'uid':userInfo.id,
+                'salt':userInfo.salt,
+              });
+          let delApi = tools.config.apiUrl +'/index.php?m=Api&a=removeKeywords'
+
+          this.$http.post(delApi,{
+              id:item.id,
+              uid:userInfo.id,
+              sign:sign
+          })
+          .then((response) => {
+            console.log(response);
+            if(response.data.success) {
+              this.getKeyWordsList();
+             
+            } else {
+                 this.$message({
+                  message: response.data.message,
+                  type: 'warning'
+                });
+            }
+              
+
+          })
+          
+             
+
+
+      },
+
+
+      
       
       addKeyWordsSubmit () {
-        //http://www.apiying.com/yuqing/index.php?m=Api&a=addKeywords
         let userInfo = tools.stroage.get('userInfo')
         let sign = tools.stroage.sign({
           'a':'addKeywords',
@@ -187,7 +232,6 @@ export default {
           'uid':userInfo.id,
           'salt':userInfo.salt,
         });
-        //http://www.apiying.com/yuqing/index.php?m=Api&a=keywordsList
         let api = tools.config.apiUrl +'/index.php?m=Api&a=keywordsList&uid='+userInfo.id+'&sign='+sign;
         
         this.$http.get(api)
@@ -214,14 +258,16 @@ export default {
           keyword: '',
           may_keyword:'',
           nokeyword:'',
-          frequency:''
+          frequency:'',
+          addId:'',
     
         },
         editForm: {
           keyword: '',
           may_keyword:'',
           nokeyword:'',
-          frequency:''
+          frequency:'',
+          editId:'',
     
         },
     }
