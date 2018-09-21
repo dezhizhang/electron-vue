@@ -41,7 +41,7 @@
            <el-table-column  label="操作"  fixed="right"  width="200">
               <template slot-scope="scope">
                   <el-button @click="handleEditClick(scope.row)" type="text" size="small">编辑</el-button>  | 
-                  <el-button type="text" size="small">编辑</el-button>
+                  <el-button type="text" size="small">删除</el-button>
               </template>
           </el-table-column>
         </el-table> 
@@ -91,32 +91,32 @@ export default {
 
       },
       handleEditClick (item){
-         let editApi = tools.config.apiUrl +'/index.php?m=Api&a=oneKeywordsList&uid='+userInfo.id+'&sign='+sign+'&id='+item.id;
+        console.log(item.id);
+
+         
          this.editKeywordsVisible = true;
-             let userInfo = tools.stroage.get('userInfo')
+          let userInfo = tools.stroage.get('userInfo')
           let sign = tools.stroage.sign({
               'id':item.id,
               'a':'oneKeywordsList',
               'uid':userInfo.id,
               'salt':userInfo.salt,
            });
+          let editApi = tools.config.apiUrl +'/index.php?m=Api&a=oneKeywordsList&uid='+userInfo.id+'&sign='+sign+'&id='+item.id;
            
-          this.$http.get(editApi)
+           this.$http.get(editApi)
           .then((response) => {
             let result = response.data.result
             this.editForm.keyword = result.keyword;
             this.editForm.may_keyword = result.may_keyword;
             this.editForm.nokeyword = result.nokeyword;
             this.editForm.frequency = result.frequency;
-            console.log(response);
           })
           .catch(function (error) {
             console.log(error);
           });
       },
       editKeyWordsSubmit () {
-           console.log(this.editForm.id);
-
           //：http://www.apiying.com/yuqing/index.php?m=Api&a=editKeywords
              let userInfo = tools.stroage.get('userInfo')
              let sign = tools.stroage.sign({
@@ -125,19 +125,19 @@ export default {
                 'uid':userInfo.id,
                 'salt':userInfo.salt,
               });
-          //   this.$http.post(tools.config.apiUrl+'/index.php?m=Api&a=editKeywords', {
-          //       id:this.editForm.id,
-          //       keyword: this.editForm.keyword,
-          //       may_keyword: this.editForm.may_keyword,
-          //       nokeyword: this.editForm.nokeyword,
-          //       frequency: this.editForm.frequency,
-          //       sign:sign,
-          //       uid:userInfo.id,
-          //  }).
-          //  then((response) => {
-          //    console.log(response);
+            this.$http.post(tools.config.apiUrl+'/index.php?m=Api&a=editKeywords', {
+                id:this.editForm.id,
+                keyword: this.editForm.keyword,
+                may_keyword: this.editForm.may_keyword,
+                nokeyword: this.editForm.nokeyword,
+                frequency: this.editForm.frequency,
+                sign:sign,
+                uid:userInfo.id,
+           }).
+           then((response) => {
+             console.log(response);
 
-          //  })
+           })
           //  .catch(function (error) {
           //   console.log(error);
           // });
