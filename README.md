@@ -1,7 +1,5 @@
 # electron-vue
 
-> An electron-vue project
-
 #### Build Setup
 
 ``` bash
